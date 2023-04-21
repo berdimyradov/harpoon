@@ -87,6 +87,11 @@ const PokemonTooltipTemplate = (props: { pokemon: Pokemon }) => {
 
 function App() {
   const pokemons = usePokemons();
+
+  if (!pokemons.length) {
+    return <img className="h-48 w-48 animate-spin" src="/pokeball.png" />;
+  }
+
   return (
     <div className="h-full">
       <Board pokemons={pokemons} />
