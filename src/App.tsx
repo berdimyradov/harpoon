@@ -1,55 +1,44 @@
-import { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
-import "./App.css";
-import { USERS, User, random_set } from "./users";
+import { usePokemons } from "./hooks";
+import { Pokemon } from "./types";
 
-const SUPPORTED_USERS = 108;
-const usersMap: UserMap = USERS.slice(0, SUPPORTED_USERS).reduce(
-  (accum, user, index) => {
-    accum[random_set[index]] = user;
-    return accum;
-  },
-  {} as UserMap
-);
+const SPRITES_URL =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+// const IMAGE_URL = `${SPRITES_URL}`;
+const IMAGE_URL = `${SPRITES_URL}/other/official-artwork`;
+// const IMAGE_URL = `${SPRITES_URL}/other/dream-world`; // .svg
 
-const Board = () => {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-
-  useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${SUPPORTED_USERS}`)
-      .then((response) => response.json())
-      .then((pokeData) => {
-        setPokemons(pokeData.results);
-      });
-  }, []);
-
+const Board = ({ pokemons }: { pokemons: Pokemon[] }) => {
   return (
     <div className="flex flex-row flex-wrap justify-start content-center">
-      {pokemons.map((pokemon, index) => {
+      {pokemons.map(({ id, name, owner, isShiny }, index) => {
         index++;
-        const isPokemonActivated = index in usersMap;
-        const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index}.png`;
-
+        const bgUrl = `${IMAGE_URL}${isShiny ? "/shiny" : ""}/${id}.png`;
         return (
           <div
-            key={pokemon.name}
-            className="grow-0 shrink-0 basis-auto m-px border h-24 w-24 bg-no-repeat"
+            key={id}
+            className="grow-0 shrink-0 basis-auto m-px border h-24 w-24 bg-[length:85px_85px] bg-left-bottom bg-no-repeat text-right pr-1"
             style={{
-              backgroundImage: `url(${pokemonImageUrl})`,
-              filter: `grayscale(${isPokemonActivated ? "0" : "100%"})`,
+              backgroundImage: `url(${bgUrl})`,
+              filter: `grayscale(${owner ? "0" : "100%"})`,
             }}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={`${id}`}
           >
-            {isPokemonActivated ? (
+            {owner ? (
               <a
-                href={`https://github.com/${usersMap[index].username}`}
-                id={pokemon.name}
-                className="relative block top-0 left-0 w-full h-full text-right pr-1"
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={`Pokemon: ${pokemon.name} | User: ${usersMap[index].username}`}
-              >
-                {index}
-              </a>
+                href={`https://github.com/${owner}`}
+                id={name}
+                className="relative block top-0 left-0 w-full h-full"
+              />
             ) : null}
+            <span
+              className={`absolute right-0.5 top-px text-sm ${
+                owner ? "text-blue-700" : "text-black"
+              }`}
+            >
+              {index}
+            </span>
           </div>
         );
       })}
@@ -57,18 +46,62 @@ const Board = () => {
   );
 };
 
+const PokemonTooltipTemplate = (props: { pokemon: Pokemon }) => {
+  const { pokemon } = props;
+  return (
+    <div className="p-2">
+      <div>
+        {/* {pokemon.id} */}
+        <b>Pokemon: </b>
+        {pokemon.name}
+      </div>
+
+      {pokemon.owner ? (
+        <div>
+          <b>Owner: </b>
+          {pokemon.owner}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center">
+          <img className="h-28 w-28" src={`${IMAGE_URL}/${pokemon.id}.png`} />
+          <i>Default version</i>
+        </div>
+      )}
+
+      {pokemon.owner && pokemon.isShiny ? (
+        <span className="absolute top-0.5 right-1.5">⭐️</span>
+      ) : null}
+
+      {pokemon.owner && !pokemon.isShiny ? (
+        <div className="flex flex-col items-center">
+          <img
+            className="h-28 w-28"
+            src={`${IMAGE_URL}/shiny/${pokemon.id}.png`}
+          />
+          <i>Shiny version</i>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 function App() {
+  const pokemons = usePokemons();
   return (
     <div className="h-full">
-      <Board />
-      <Tooltip id="my-tooltip" />
+      <Board pokemons={pokemons} />
+      <Tooltip
+        id="my-tooltip"
+        // openOnClick={true}
+        render={(props) => {
+          if (!props.content) return null;
+          const pokemonId = Number(props.content);
+          const pokemon = pokemons.find((p) => p.id === pokemonId) as Pokemon;
+          return <PokemonTooltipTemplate pokemon={pokemon} />;
+        }}
+      />
     </div>
   );
 }
 
 export default App;
-
-type UserMap = Record<number, User>;
-type Pokemon = {
-  name: string;
-};
