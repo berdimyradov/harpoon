@@ -17,7 +17,7 @@ export const usePokemons = () => {
       .then((pokeData) => {
         return pokemon_order.map((id, index) => {
           const pokemon = {
-            ...pokeData.results[id],
+            ...pokeData.results[id - 1],
             id,
             owner: POKEMONS_IS_CAUGHT_BY[index + 1],
             isShiny: !!POKEMONS_IS_SHINY[index + 1],
