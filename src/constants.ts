@@ -14,4 +14,5 @@ export const POKEMONS_IS_CAUGHT_BY: Record<number, string> = {
 
 export const POKEMONS_IS_SHINY: Record<number, boolean> = {
   46: true,
+  85: true,
 } as const;
