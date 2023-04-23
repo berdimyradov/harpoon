@@ -9,6 +9,7 @@ export const pokemon_order = [
 
 export const POKEMONS_IS_CAUGHT_BY: Record<number, string> = {
   46: "berdimyradov",
+  85: "rovshen99",
 } as const;
 
 export const POKEMONS_IS_SHINY: Record<number, boolean> = {
