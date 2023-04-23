@@ -6,13 +6,13 @@ import {
 } from "./constants";
 import { Pokemon } from "./types";
 
-const SUPPORTED_USERS = 108;
+const SUPPORTED_POKEMONS = 108;
 
 export const usePokemons = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
 
   useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${SUPPORTED_USERS}`)
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${SUPPORTED_POKEMONS}`)
       .then((response) => response.json())
       .then((pokeData) => {
         return pokemon_order.map((id, index) => {
