@@ -3,13 +3,14 @@ import { usePokemons } from "./hooks";
 import { Pokemon } from "./types";
 
 const IMAGE_URL = `/pokemons`;
+const EXT = "webp";
 
 const Board = ({ pokemons }: { pokemons: Pokemon[] }) => {
   return (
     <div className="flex flex-row flex-wrap justify-start content-center">
       {pokemons.map(({ id, name, owner, isShiny }, index) => {
         index++;
-        const bgUrl = `${IMAGE_URL}${isShiny ? "/shiny" : ""}/${id}.png`;
+        const bgUrl = `${IMAGE_URL}${isShiny ? "/shiny" : ""}/${id}.${EXT}`;
         return (
           <div
             key={id}
@@ -59,7 +60,10 @@ const PokemonTooltipTemplate = (props: { pokemon: Pokemon }) => {
         </div>
       ) : (
         <div className="flex flex-col items-center">
-          <img className="h-28 w-28" src={`${IMAGE_URL}/${pokemon.id}.png`} />
+          <img
+            className="h-28 w-28"
+            src={`${IMAGE_URL}/${pokemon.id}.${EXT}`}
+          />
           <i>Default version</i>
         </div>
       )}
@@ -72,7 +76,7 @@ const PokemonTooltipTemplate = (props: { pokemon: Pokemon }) => {
         <div className="flex flex-col items-center">
           <img
             className="h-28 w-28"
-            src={`${IMAGE_URL}/shiny/${pokemon.id}.png`}
+            src={`${IMAGE_URL}/shiny/${pokemon.id}.${EXT}`}
           />
           <i>Shiny version</i>
         </div>
