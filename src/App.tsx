@@ -2,11 +2,7 @@ import { Tooltip } from "react-tooltip";
 import { usePokemons } from "./hooks";
 import { Pokemon } from "./types";
 
-const SPRITES_URL =
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
-// const IMAGE_URL = `${SPRITES_URL}`;
-const IMAGE_URL = `${SPRITES_URL}/other/official-artwork`;
-// const IMAGE_URL = `${SPRITES_URL}/other/dream-world`; // .svg
+const IMAGE_URL = `/pokemons`;
 
 const Board = ({ pokemons }: { pokemons: Pokemon[] }) => {
   return (
