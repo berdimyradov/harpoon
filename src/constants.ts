@@ -1,3 +1,7 @@
+export const SUPPORTED_POKEMONS = 108;
+export const IMAGE_URL = `/pokemons`;
+export const EXT = "webp";
+
 export const pokemon_order = [
   62, 75, 74, 71, 96, 90, 12, 100, 21, 105, 8, 88, 82, 60, 27, 13, 73, 11, 2,
   70, 31, 57, 45, 4, 26, 48, 28, 53, 103, 98, 30, 49, 69, 83, 64, 37, 50, 52,
